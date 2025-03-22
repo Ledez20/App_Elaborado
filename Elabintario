@@ -202,6 +202,7 @@
                         <th>Lote</th>
                         <th>Cantidad</th>
                         <th>Unidad</th>
+                        <th>Equivalencia en Bins</th>
                         <th>Estado</th>
                         <th>Fecha y Hora</th>
                         <th>Acciones</th>
@@ -247,7 +248,6 @@
                         <th>Número de Bins</th>
                         <th>Consumo</th>
                         <th>Fecha y Hora</th>
-                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -269,12 +269,21 @@
         const consumoPorBin = {
             'SAL': 12.5,
             'HIDRAL-70': 6,
-            'HYDROMAR-4': 1
+            'HYDROMAR-4': 1,
+            'ANTIESPUMANTE': 0.5
         };
 
-        // Umbrales de alerta de stock (en porcentaje)
-        const UMBRAL_STOCK_BAJO = 20;
-        const UMBRAL_STOCK_MEDIO = 50;
+        // Umbral para alertas de stock bajo (20%)
+        const umbralStockBajo = 0.2;
+
+        // Función para mostrar una sección y ocultar las demás
+        function showSection(sectionId) {
+            const sections = document.getElementsByClassName('section');
+            for (let section of sections) {
+                section.style.display = 'none';
+            }
+            document.getElementById(sectionId).style.display = 'block';
+        }
 
         // Función para actualizar la unidad de medida según el producto seleccionado
         function actualizarUnidadMedida() {
@@ -282,251 +291,91 @@
             const unidadMedida = document.getElementById('unidadMedida');
             if (producto && productosConfig[producto]) {
                 unidadMedida.textContent = `Unidad de medida: ${productosConfig[producto]}`;
-                unidadMedida.style.display = 'block';
             } else {
-                unidadMedida.style.display = 'none';
+                unidadMedida.textContent = '';
             }
         }
 
-        // Función para mostrar mensajes de alerta
-        function showAlert(message, type) {
+        // Función para mostrar alertas
+        function mostrarAlerta(mensaje, tipo = 'success') {
             const alert = document.getElementById('alert');
-            alert.textContent = message;
-            alert.className = `alert alert-${type}`;
+            alert.textContent = mensaje;
+            alert.className = `alert alert-${tipo}`;
             alert.style.display = 'block';
             setTimeout(() => {
                 alert.style.display = 'none';
             }, 3000);
         }
 
-        // Función para mostrar la sección seleccionada
-        function showSection(sectionId) {
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => {
-                section.style.display = 'none';
-            });
-            document.getElementById(sectionId).style.display = 'block';
-        }
+        // Función para agregar un producto al inventario
+        function agregarProducto() {
+            const producto = document.getElementById('producto').value;
+            const lote = document.getElementById('lote').value;
+            const cantidad = document.getElementById('cantidad').value;
 
-        // Mostrar la sección de Gestión de Inventario por defecto
-        showSection('gestionInventario');
-
-        // Función para calcular el consumo estimado
-        function calcularConsumoEstimado() {
-            const bins = parseInt(document.getElementById('bins').value) || 1;
-            const consumoEstimado = document.getElementById('consumoEstimado');
-            document.getElementById('binsValue').textContent = bins;
-            
-            let html = '<ul>';
-            for (const [producto, cantidad] of Object.entries(consumoPorBin)) {
-                const total = cantidad * bins;
-                html += `<li>${producto}: ${total} ${productosConfig[producto]}</li>`;
+            if (!producto || !lote || !cantidad) {
+                mostrarAlerta('Por favor, complete todos los campos', 'error');
+                return;
             }
-            html += '</ul>';
-            
-            consumoEstimado.innerHTML = html;
-        }
 
-        // Agregar evento para actualizar consumo estimado
-        document.getElementById('bins').addEventListener('input', calcularConsumoEstimado);
+            if (cantidad <= 0) {
+                mostrarAlerta('La cantidad debe ser mayor a 0', 'error');
+                return;
+            }
 
-        // Función para verificar stock disponible
-        function verificarStockDisponible(bins) {
             const inventario = JSON.parse(localStorage.getItem('inventario')) || [];
-            const stockActual = {};
-            
-            // Calcular stock actual por producto
-            inventario.forEach(item => {
-                if (!stockActual[item.producto]) {
-                    stockActual[item.producto] = 0;
-                }
-                stockActual[item.producto] += parseFloat(item.cantidad);
+            inventario.push({
+                producto,
+                lote,
+                cantidad: parseFloat(cantidad),
+                unidad: productosConfig[producto],
+                fechaHora: new Date().toLocaleString()
             });
 
-            // Verificar si hay suficiente stock
-            for (const [producto, cantidadPorBin] of Object.entries(consumoPorBin)) {
-                const cantidadNecesaria = cantidadPorBin * bins;
-                if (!stockActual[producto] || stockActual[producto] < cantidadNecesaria) {
-                    return {
-                        disponible: false,
-                        producto: producto,
-                        stockDisponible: stockActual[producto] || 0,
-                        cantidadNecesaria: cantidadNecesaria
-                    };
-                }
-            }
-            return { disponible: true };
+            localStorage.setItem('inventario', JSON.stringify(inventario));
+            mostrarHistorialInventario();
+            mostrarAlerta('Producto agregado correctamente');
+
+            // Limpiar formulario
+            document.getElementById('producto').value = '';
+            document.getElementById('lote').value = '';
+            document.getElementById('cantidad').value = '';
+            document.getElementById('unidadMedida').textContent = '';
         }
 
-        // Función para verificar stock bajo
-        function verificarStockBajo() {
-            const inventario = JSON.parse(localStorage.getItem('inventario')) || [];
-            const alertas = [];
-
-            // Agrupar por producto y lote
-            const stockPorProducto = {};
-            inventario.forEach(item => {
-                if (!stockPorProducto[item.producto]) {
-                    stockPorProducto[item.producto] = [];
-                }
-                stockPorProducto[item.producto].push({
-                    lote: item.lote,
-                    cantidad: parseFloat(item.cantidad),
-                    unidad: item.unidad
-                });
-            });
-
-            // Verificar cada producto
-            for (const [producto, lotes] of Object.entries(stockPorProducto)) {
-                // Ordenar lotes por fecha (los más antiguos primero)
-                lotes.sort((a, b) => {
-                    const itemA = inventario.find(i => i.producto === producto && i.lote === a.lote);
-                    const itemB = inventario.find(i => i.producto === producto && i.lote === b.lote);
-                    return new Date(itemA.fechaHora) - new Date(itemB.fechaHora);
-                });
-
-                // Verificar el lote más antiguo
-                if (lotes.length > 0) {
-                    const loteMasAntiguo = lotes[0];
-                    const consumoPromedio = consumoPorBin[producto] * 5; // Estimado para 5 bins
-                    const porcentajeRestante = (loteMasAntiguo.cantidad / consumoPromedio) * 100;
-
-                    if (porcentajeRestante <= UMBRAL_STOCK_BAJO) {
-                        alertas.push(`Stock bajo en ${producto} - Lote: ${loteMasAntiguo.lote} - Quedan ${loteMasAntiguo.cantidad} ${loteMasAntiguo.unidad}`);
-                    }
-                }
-            }
-
-            return alertas;
-        }
-
-        // Función para mostrar alertas de stock bajo
-        function mostrarAlertasStockBajo() {
-            const alertas = verificarStockBajo();
-            if (alertas.length > 0) {
-                const alert = document.getElementById('alert');
-                alert.innerHTML = '<strong>Alertas de Stock Bajo:</strong><br>' + alertas.join('<br>');
-                alert.className = 'alert alert-warning';
-                alert.style.display = 'block';
+        // Función para eliminar un item del inventario
+        function eliminarItemInventario(index) {
+            if (confirm('¿Está seguro de eliminar este item?')) {
+                const inventario = JSON.parse(localStorage.getItem('inventario')) || [];
+                inventario.splice(index, 1);
+                localStorage.setItem('inventario', JSON.stringify(inventario));
+                mostrarHistorialInventario();
+                mostrarAlerta('Item eliminado correctamente');
             }
         }
 
         // Función para obtener el estado del stock
         function obtenerEstadoStock(cantidad, producto) {
-            const consumoPromedio = consumoPorBin[producto] * 5;
-            const porcentajeRestante = (cantidad / consumoPromedio) * 100;
-            
-            if (porcentajeRestante <= UMBRAL_STOCK_BAJO) {
-                return { texto: 'Stock Bajo', clase: 'stock-bajo' };
-            } else if (porcentajeRestante <= UMBRAL_STOCK_MEDIO) {
-                return { texto: 'Stock Medio', clase: 'stock-medio' };
+            const consumoEstimado = consumoPorBin[producto] * 5; // 5 bins como referencia
+            const porcentaje = cantidad / consumoEstimado;
+
+            if (porcentaje <= umbralStockBajo) {
+                return { texto: 'Bajo', clase: 'stock-bajo' };
+            } else if (porcentaje <= 0.5) {
+                return { texto: 'Medio', clase: 'stock-medio' };
             } else {
-                return { texto: 'Stock Alto', clase: 'stock-alto' };
+                return { texto: 'Alto', clase: 'stock-alto' };
             }
         }
 
-        // Función para descontar del inventario
-        function descontarDelInventario(bins, elaboracionId) {
-            let inventario = JSON.parse(localStorage.getItem('inventario')) || [];
-            const descuentos = [];
-
-            // Verificar stock disponible antes de proceder
-            const verificacionStock = verificarStockDisponible(bins);
-            if (!verificacionStock.disponible) {
-                showAlert(`No hay suficiente stock de ${verificacionStock.producto}. Se necesitan ${verificacionStock.cantidadNecesaria} ${productosConfig[verificacionStock.producto]}`, 'error');
-                return null;
-            }
-
-            // Para cada producto requerido
-            for (const [producto, cantidadPorBin] of Object.entries(consumoPorBin)) {
-                let cantidadNecesaria = cantidadPorBin * bins;
-                let inventarioRestante = [...inventario];
-
-                // Ordenar lotes por fecha (los más antiguos primero)
-                const lotesProducto = inventarioRestante
-                    .filter(i => i.producto === producto)
-                    .sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora));
-
-                // Descontar de los lotes más antiguos primero
-                for (const lote of lotesProducto) {
-                    if (cantidadNecesaria <= 0) break;
-
-                    const itemIndex = inventarioRestante.findIndex(i => i.producto === producto && i.lote === lote.lote);
-                    const cantidadDisponible = parseFloat(lote.cantidad);
-                    const cantidadDescontar = Math.min(cantidadDisponible, cantidadNecesaria);
-                    
-                    // Actualizar cantidad en el inventario
-                    lote.cantidad = (cantidadDisponible - cantidadDescontar).toString();
-                    cantidadNecesaria -= cantidadDescontar;
-
-                    // Registrar el descuento
-                    descuentos.push({
-                        producto: producto,
-                        cantidad: cantidadDescontar,
-                        lote: lote.lote,
-                        fechaHora: new Date().toLocaleString()
-                    });
-
-                    // Si el item se agotó, eliminarlo del inventario
-                    if (parseFloat(lote.cantidad) <= 0) {
-                        inventarioRestante = inventarioRestante.filter(i => i !== lote);
-                    }
-                }
-
-                // Actualizar el inventario principal con los cambios
-                inventario = inventarioRestante;
-            }
-
-            // Actualizar inventario en localStorage
-            localStorage.setItem('inventario', JSON.stringify(inventario));
-
-            // Guardar historial de descuentos
-            let historialDescuentos = JSON.parse(localStorage.getItem('historialDescuentos')) || {};
-            historialDescuentos[elaboracionId] = descuentos;
-            localStorage.setItem('historialDescuentos', JSON.stringify(historialDescuentos));
-
-            // Verificar stock bajo después de la operación
-            mostrarAlertasStockBajo();
-
-            return descuentos;
-        }
-
-        // Función para agregar un producto al inventario
-        function agregarProducto() {
-            const producto = document.getElementById('producto').value;
-            const lote = document.getElementById('lote').value.trim();
-            const cantidad = document.getElementById('cantidad').value;
-
-            if (!producto || !lote || !cantidad) {
-                showAlert('Por favor, completa todos los campos.', 'error');
-                return;
-            }
-
-            if (cantidad < 0) {
-                showAlert('La cantidad no puede ser negativa.', 'error');
-                return;
-            }
-
-            const fechaHora = new Date().toLocaleString();
-            const item = { 
-                producto, 
-                lote,
-                cantidad, 
-                unidad: productosConfig[producto],
-                fechaHora 
+        // Función para calcular la equivalencia en bins
+        function calcularEquivalenciaBins(cantidad, producto) {
+            if (!consumoPorBin[producto]) return { bins: 0, porcentaje: 0 };
+            const bins = cantidad / consumoPorBin[producto];
+            return {
+                bins: bins.toFixed(1),
+                porcentaje: ((bins / 5) * 100).toFixed(1) // Porcentaje basado en 5 bins
             };
-
-            let inventario = JSON.parse(localStorage.getItem('inventario')) || [];
-            inventario.push(item);
-            localStorage.setItem('inventario', JSON.stringify(inventario));
-
-            document.getElementById('producto').value = '';
-            document.getElementById('lote').value = '';
-            document.getElementById('cantidad').value = '';
-            document.getElementById('unidadMedida').style.display = 'none';
-
-            showAlert('Producto agregado exitosamente.', 'success');
-            mostrarHistorialInventario();
         }
 
         // Función para mostrar el historial de inventario
@@ -543,12 +392,18 @@
                 const row = historialInventario.insertRow();
                 const cantidad = parseFloat(item.cantidad);
                 const estado = obtenerEstadoStock(cantidad, item.producto);
+                const equivalencia = calcularEquivalenciaBins(cantidad, item.producto);
                 
                 row.innerHTML = `
                     <td>${item.producto}</td>
                     <td>${item.lote}</td>
                     <td class="${estado.clase}">${item.cantidad}</td>
                     <td>${item.unidad}</td>
+                    <td class="${estado.clase}">
+                        ${equivalencia.bins} bins
+                        <br>
+                        <small>(${equivalencia.porcentaje}% de 5 bins)</small>
+                    </td>
                     <td class="${estado.clase}">${estado.texto}</td>
                     <td>${item.fechaHora}</td>
                     <td>
@@ -561,64 +416,199 @@
             mostrarAlertasStockBajo();
         }
 
-        // Función para eliminar un item del inventario
-        function eliminarItemInventario(index) {
-            if (confirm('¿Está seguro de que desea eliminar este item?')) {
-                let inventario = JSON.parse(localStorage.getItem('inventario')) || [];
-                inventario.splice(index, 1);
-                localStorage.setItem('inventario', JSON.stringify(inventario));
-                mostrarHistorialInventario();
-                showAlert('Item eliminado exitosamente.', 'success');
+        // Función para verificar stock bajo
+        function verificarStockBajo() {
+            const inventario = JSON.parse(localStorage.getItem('inventario')) || [];
+            const alertas = [];
+
+            inventario.forEach(item => {
+                const cantidad = parseFloat(item.cantidad);
+                const estado = obtenerEstadoStock(cantidad, item.producto);
+                
+                if (estado.texto === 'Bajo') {
+                    alertas.push({
+                        producto: item.producto,
+                        lote: item.lote,
+                        cantidad: cantidad,
+                        unidad: item.unidad
+                    });
+                }
+            });
+
+            return alertas;
+        }
+
+        // Función para mostrar alertas de stock bajo
+        function mostrarAlertasStockBajo() {
+            const alertas = verificarStockBajo();
+            if (alertas.length > 0) {
+                let mensaje = '⚠️ Alertas de Stock Bajo:\n\n';
+                alertas.forEach(alerta => {
+                    mensaje += `${alerta.producto} (Lote: ${alerta.lote}): ${alerta.cantidad} ${alerta.unidad}\n`;
+                });
+                mostrarAlerta(mensaje, 'warning');
             }
+        }
+
+        // Función para calcular el consumo estimado
+        function calcularConsumoEstimado() {
+            const bins = parseInt(document.getElementById('bins').value) || 1;
+            const consumoEstimado = document.getElementById('consumoEstimado');
+            document.getElementById('binsValue').textContent = bins;
+            
+            let html = '<ul>';
+            for (const [producto, cantidad] of Object.entries(consumoPorBin)) {
+                const total = cantidad * bins;
+                const stockActual = obtenerStockActual(producto);
+                const equivalencia = calcularEquivalenciaBins(stockActual, producto);
+                const estado = obtenerEstadoStock(stockActual, producto);
+                
+                html += `
+                    <li>
+                        ${producto}: ${total} ${productosConfig[producto]}
+                        <br>
+                        <small>
+                            Stock disponible: ${stockActual} ${productosConfig[producto]} 
+                            (${equivalencia.bins} bins)
+                            <span class="${estado.clase}">${estado.texto}</span>
+                        </small>
+                    </li>`;
+            }
+            html += '</ul>';
+            
+            consumoEstimado.innerHTML = html;
+        }
+
+        // Función para obtener el stock actual de un producto
+        function obtenerStockActual(producto) {
+            const inventario = JSON.parse(localStorage.getItem('inventario')) || [];
+            return inventario
+                .filter(item => item.producto === producto)
+                .reduce((total, item) => total + parseFloat(item.cantidad), 0);
+        }
+
+        // Función para verificar stock disponible
+        function verificarStockDisponible(bins) {
+            const inventario = JSON.parse(localStorage.getItem('inventario')) || [];
+            const resultados = [];
+
+            for (const [producto, consumo] of Object.entries(consumoPorBin)) {
+                const cantidadNecesaria = consumo * bins;
+                const stockDisponible = obtenerStockActual(producto);
+                const disponible = stockDisponible >= cantidadNecesaria;
+
+                resultados.push({
+                    producto,
+                    disponible,
+                    cantidadNecesaria,
+                    stockDisponible
+                });
+            }
+
+            return resultados;
+        }
+
+        // Función para descontar del inventario
+        function descontarDelInventario(bins) {
+            let inventario = JSON.parse(localStorage.getItem('inventario')) || [];
+            const consumo = [];
+
+            for (const [producto, consumoPorBin] of Object.entries(consumoPorBin)) {
+                let cantidadNecesaria = consumoPorBin * bins;
+                let inventarioProducto = inventario.filter(item => item.producto === producto);
+                
+                // Ordenar por fecha (FIFO)
+                inventarioProducto.sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora));
+
+                while (cantidadNecesaria > 0 && inventarioProducto.length > 0) {
+                    const item = inventarioProducto[0];
+                    const cantidadDisponible = parseFloat(item.cantidad);
+                    
+                    if (cantidadDisponible <= cantidadNecesaria) {
+                        // Consumir todo el lote
+                        consumo.push({
+                            producto: item.producto,
+                            lote: item.lote,
+                            cantidad: cantidadDisponible
+                        });
+                        cantidadNecesaria -= cantidadDisponible;
+                        inventarioProducto.shift();
+                    } else {
+                        // Consumir parcialmente el lote
+                        consumo.push({
+                            producto: item.producto,
+                            lote: item.lote,
+                            cantidad: cantidadNecesaria
+                        });
+                        item.cantidad = (cantidadDisponible - cantidadNecesaria).toFixed(2);
+                        cantidadNecesaria = 0;
+                    }
+                }
+
+                if (cantidadNecesaria > 0) {
+                    throw new Error(`No hay suficiente stock de ${producto}`);
+                }
+            }
+
+            // Actualizar el inventario principal
+            inventario = inventarioProducto;
+            localStorage.setItem('inventario', JSON.stringify(inventario));
+
+            return consumo;
         }
 
         // Función para registrar una elaboración
         function registrarElaboracion() {
             const cliente = document.getElementById('cliente').value;
-            const referencia = document.getElementById('referencia').value.trim();
+            const referencia = document.getElementById('referencia').value;
             const bins = parseInt(document.getElementById('bins').value);
 
             if (!cliente || !referencia || !bins) {
-                showAlert('Por favor, completa todos los campos.', 'error');
+                mostrarAlerta('Por favor, complete todos los campos', 'error');
                 return;
             }
 
-            if (bins < 1) {
-                showAlert('El número de bins debe ser mayor a 0.', 'error');
-                return;
+            try {
+                // Verificar stock disponible
+                const verificacionStock = verificarStockDisponible(bins);
+                const stockInsuficiente = verificacionStock.find(item => !item.disponible);
+
+                if (stockInsuficiente) {
+                    mostrarAlerta(
+                        `Stock insuficiente de ${stockInsuficiente.producto}. ` +
+                        `Necesario: ${stockInsuficiente.cantidadNecesaria} ${productosConfig[stockInsuficiente.producto]}, ` +
+                        `Disponible: ${stockInsuficiente.stockDisponible} ${productosConfig[stockInsuficiente.producto]}`,
+                        'error'
+                    );
+                    return;
+                }
+
+                // Descontar del inventario
+                const consumo = descontarDelInventario(bins);
+
+                // Registrar la elaboración
+                const elaboraciones = JSON.parse(localStorage.getItem('elaboraciones')) || [];
+                elaboraciones.push({
+                    cliente,
+                    referencia,
+                    bins,
+                    consumo,
+                    fechaHora: new Date().toLocaleString()
+                });
+
+                localStorage.setItem('elaboraciones', JSON.stringify(elaboraciones));
+                mostrarHistorialElaboraciones();
+                mostrarHistorialInventario();
+                mostrarAlerta('Elaboración registrada correctamente');
+
+                // Limpiar formulario
+                document.getElementById('cliente').value = '';
+                document.getElementById('referencia').value = '';
+                document.getElementById('bins').value = '1';
+                calcularConsumoEstimado();
+            } catch (error) {
+                mostrarAlerta(error.message, 'error');
             }
-
-            const fechaHora = new Date().toLocaleString();
-            const elaboracionId = Date.now().toString();
-
-            // Descontar del inventario
-            const descuentos = descontarDelInventario(bins, elaboracionId);
-            if (!descuentos) {
-                return; // Si hubo error en el descuento, no continuar
-            }
-
-            const elaboracion = { 
-                id: elaboracionId,
-                cliente, 
-                referencia, 
-                bins, 
-                fechaHora,
-                consumo: descuentos
-            };
-
-            let elaboraciones = JSON.parse(localStorage.getItem('elaboraciones')) || [];
-            elaboraciones.push(elaboracion);
-            localStorage.setItem('elaboraciones', JSON.stringify(elaboraciones));
-
-            document.getElementById('cliente').value = '';
-            document.getElementById('referencia').value = '';
-            document.getElementById('bins').value = '';
-            document.getElementById('consumoEstimado').innerHTML = '';
-            document.getElementById('binsValue').textContent = '1';
-
-            showAlert('Elaboración registrada exitosamente.', 'success');
-            mostrarHistorialElaboraciones();
-            mostrarHistorialInventario();
         }
 
         // Función para mostrar el historial de elaboraciones
@@ -627,52 +617,33 @@
             historialElaboraciones.innerHTML = '';
 
             const elaboraciones = JSON.parse(localStorage.getItem('elaboraciones')) || [];
-            const historialDescuentos = JSON.parse(localStorage.getItem('historialDescuentos')) || {};
 
-            elaboraciones.forEach((elaboracion, index) => {
+            elaboraciones.forEach(elaboracion => {
                 const row = historialElaboraciones.insertRow();
-                const consumo = historialDescuentos[elaboracion.id] || [];
-                const consumoTexto = consumo.map(c => `${c.producto}: ${c.cantidad} ${productosConfig[c.producto]} (Lote: ${c.lote})`).join('<br>');
-                
+                const consumoHtml = elaboracion.consumo.map(item => 
+                    `${item.producto}: ${item.cantidad} ${productosConfig[item.producto]} (Lote: ${item.lote})`
+                ).join('<br>');
+
                 row.innerHTML = `
                     <td>${elaboracion.cliente}</td>
                     <td>${elaboracion.referencia}</td>
                     <td>${elaboracion.bins}</td>
-                    <td>${consumoTexto}</td>
+                    <td>${consumoHtml}</td>
                     <td>${elaboracion.fechaHora}</td>
-                    <td>
-                        <button class="btn btn-danger" onclick="eliminarElaboracion(${index})">Eliminar</button>
-                    </td>
                 `;
             });
         }
 
-        // Función para eliminar una elaboración
-        function eliminarElaboracion(index) {
-            if (confirm('¿Está seguro de que desea eliminar esta elaboración? Esta acción no se puede deshacer.')) {
-                let elaboraciones = JSON.parse(localStorage.getItem('elaboraciones')) || [];
-                const elaboracionEliminada = elaboraciones[index];
-                
-                // Eliminar el historial de descuentos
-                let historialDescuentos = JSON.parse(localStorage.getItem('historialDescuentos')) || {};
-                delete historialDescuentos[elaboracionEliminada.id];
-                localStorage.setItem('historialDescuentos', JSON.stringify(historialDescuentos));
-                
-                elaboraciones.splice(index, 1);
-                localStorage.setItem('elaboraciones', JSON.stringify(elaboraciones));
-                
-                mostrarHistorialElaboraciones();
-                showAlert('Elaboración eliminada exitosamente.', 'success');
-            }
-        }
+        // Agregar evento para actualizar consumo estimado
+        document.getElementById('bins').addEventListener('input', calcularConsumoEstimado);
 
-        // Cargar historiales al iniciar la página
-        window.onload = function() {
-            mostrarHistorialInventario();
-            mostrarHistorialElaboraciones();
-            calcularConsumoEstimado();
-            mostrarAlertasStockBajo();
-        };
+        // Mostrar la sección de Gestión de Inventario por defecto
+        showSection('gestionInventario');
+
+        // Cargar datos iniciales
+        mostrarHistorialInventario();
+        mostrarHistorialElaboraciones();
+        calcularConsumoEstimado();
     </script>
 </body>
 </html>
