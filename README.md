@@ -1,4 +1,4 @@
-[<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -32,36 +32,59 @@
             background-color: var(--primary-color);
             color: var(--text-primary);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Media query para dispositivos móviles */
         @media screen and (max-width: 430px) {
+            body {
+                overflow-x: hidden;
+            }
+
             .sidebar {
                 position: fixed;
                 bottom: 0;
                 left: 0;
                 width: 100%;
-                height: 60px;
+                height: auto;
                 flex-direction: row;
                 justify-content: space-around;
-                padding: 0;
+                padding: 10px;
                 z-index: 1000;
+                background-color: var(--primary-color);
+                box-shadow: 0 -2px 10px var(--shadow-color);
             }
 
             .sidebar button {
-                padding: 8px;
+                padding: 10px;
                 margin: 0;
-                font-size: 0.8em;
+                font-size: 0.9em;
                 width: auto;
-                min-width: 80px;
+                min-width: 100px;
+                height: 40px;
             }
 
-            .main-content {
-                margin-left: 0;
-                padding: 15px;
-                padding-bottom: 70px;
+            .home-button {
+                margin-bottom: 0 !important;
+            }
+
+            .content {
+                margin-left: 0 !important;
+                padding: 10px;
+                padding-bottom: 80px;
                 width: 100%;
                 box-sizing: border-box;
+            }
+
+            .section {
+                padding: 15px;
+                margin-bottom: 60px;
+            }
+
+            .section-header h2 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
             }
 
             .section-nav {
@@ -71,38 +94,134 @@
 
             .section-nav button {
                 width: 100%;
-            }
-
-            .grid-container {
-                grid-template-columns: 1fr;
-            }
-
-            .card {
-                margin: 10px 0;
-                padding: 15px;
+                margin: 0;
             }
 
             .form-group {
                 flex-direction: column;
+                margin-bottom: 15px;
             }
 
             .form-group input,
-            .form-group select {
+            .form-group select,
+            .form-group textarea {
                 width: 100%;
                 margin: 5px 0;
+                font-size: 16px;
+                padding: 12px;
             }
 
             table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
                 font-size: 0.9em;
+                margin: 10px 0;
             }
 
             th, td {
-                padding: 8px;
+                padding: 10px;
+                min-width: 100px;
+            }
+
+            .welcome-cards {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 10px;
+            }
+
+            .welcome-card {
+                padding: 20px;
+            }
+
+            .welcome-stats {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 10px;
+            }
+
+            .stat-card {
+                padding: 15px;
             }
 
             .modal-content {
+                width: 95%;
+                margin: 10px auto;
+                padding: 15px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .notas-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .alert-popup {
                 width: 90%;
-                margin: 20px auto;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 0.9em;
+            }
+
+            .historial-content {
+                overflow-x: auto;
+            }
+
+            .bins-list {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+                gap: 5px;
+            }
+
+            .bin-item {
+                padding: 5px;
+                font-size: 0.8em;
+            }
+
+            .reloj-analogico {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        /* Ajustes específicos para iPhone 13 */
+        @media screen and (device-width: 390px) and (device-height: 844px) {
+            .sidebar button {
+                font-size: 0.85em;
+                min-width: 90px;
+            }
+
+            .content {
+                padding-bottom: 70px;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 16px;
+                padding: 10px;
+            }
+        }
+
+        /* Ajustes para la orientación landscape en móviles */
+        @media screen and (orientation: landscape) and (max-height: 500px) {
+            .sidebar {
+                height: auto;
+                padding: 5px;
+            }
+
+            .sidebar button {
+                height: 35px;
+                padding: 5px 10px;
+            }
+
+            .content {
+                padding-bottom: 50px;
+            }
+
+            .welcome-cards,
+            .welcome-stats {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -175,13 +294,19 @@
         }
 
         .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 200px;
             background-color: var(--primary-color);
             color: var(--text-primary);
             padding: 15px;
             height: 100vh;
-            position: fixed;
             box-shadow: 2px 0 5px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
         }
         .sidebar button {
             width: 100%;
@@ -215,18 +340,20 @@
             box-shadow: 0 4px 8px var(--shadow-color);
         }
         .content {
-            flex-grow: 1;
+            flex: 1;
             padding: 20px;
             margin-left: 200px;
-            background-color: var(--dark-color);
+            box-sizing: border-box;
+            width: calc(100% - 200px);
+            min-height: 100vh;
         }
         .section {
-            display: none;
             background-color: var(--card-bg);
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 4px 12px var(--shadow-color);
             border: 1px solid var(--border-color);
+            margin-bottom: 20px;
         }
         .form-group {
             margin-bottom: 20px;
@@ -2898,4 +3025,3 @@ Personal asignado:
     </script>
 </body>
 </html> 
-](https://ledez20.github.io/App_Elaborado/)
