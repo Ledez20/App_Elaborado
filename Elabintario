@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de inventario y elaboraciones</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gestión de Producción</title>
     <style>
         :root {
             --primary-color: #1a1b4b;
             --secondary-color: #292a73;
-            --accent-color: #0c8888f7;
+            --accent-color: #f72585;
             --light-color: #4cc9f0;
             --dark-color: #0f1033;
             --success-color: #4ef037;
@@ -23,22 +23,290 @@
             --input-border: #3a3b8c;
             --shadow-color: rgba(247, 37, 133, 0.2);
         }
+
+        /* Estilos base */
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            display: flex;
-            background-color: var(--dark-color);
+            font-family: 'Arial', sans-serif;
+            background-color: var(--primary-color);
             color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+
+        /* Media query para dispositivos móviles */
+        @media screen and (max-width: 430px) {
+            body {
+                overflow-x: hidden;
+            }
+
+            .sidebar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 10px;
+                z-index: 1000;
+                background-color: var(--primary-color);
+                box-shadow: 0 -2px 10px var(--shadow-color);
+            }
+
+            .sidebar button {
+                padding: 10px;
+                margin: 0;
+                font-size: 0.9em;
+                width: auto;
+                min-width: 100px;
+                height: 40px;
+            }
+
+            .home-button {
+                margin-bottom: 0 !important;
+            }
+
+            .content {
+                margin-left: 0 !important;
+                padding: 10px;
+                padding-bottom: 80px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .section {
+                padding: 15px;
+                margin-bottom: 60px;
+            }
+
+            .section-header h2 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+            }
+
+            .section-nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .section-nav button {
+                width: 100%;
+                margin: 0;
+            }
+
+            .form-group {
+                flex-direction: column;
+                margin-bottom: 15px;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                width: 100%;
+                margin: 5px 0;
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                font-size: 0.9em;
+                margin: 10px 0;
+            }
+
+            th, td {
+                padding: 10px;
+                min-width: 100px;
+            }
+
+            .welcome-cards {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 10px;
+            }
+
+            .welcome-card {
+                padding: 20px;
+            }
+
+            .welcome-stats {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 10px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10px auto;
+                padding: 15px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .notas-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .alert-popup {
+                width: 90%;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 0.9em;
+            }
+
+            .historial-content {
+                overflow-x: auto;
+            }
+
+            .bins-list {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+                gap: 5px;
+            }
+
+            .bin-item {
+                padding: 5px;
+                font-size: 0.8em;
+            }
+
+            .reloj-analogico {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        /* Ajustes específicos para iPhone 13 */
+        @media screen and (device-width: 390px) and (device-height: 844px) {
+            .sidebar button {
+                font-size: 0.85em;
+                min-width: 90px;
+            }
+
+            .content {
+                padding-bottom: 70px;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 16px;
+                padding: 10px;
+            }
+        }
+
+        /* Ajustes para la orientación landscape en móviles */
+        @media screen and (orientation: landscape) and (max-height: 500px) {
+            .sidebar {
+                height: auto;
+                padding: 5px;
+            }
+
+            .sidebar button {
+                height: 35px;
+                padding: 5px 10px;
+            }
+
+            .content {
+                padding-bottom: 50px;
+            }
+
+            .welcome-cards,
+            .welcome-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Media query para tablets */
+        @media screen and (min-width: 431px) and (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+
+            .sidebar button {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            .main-content {
+                margin-left: 60px;
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Media query para ordenadores */
+        @media screen and (min-width: 769px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Mejoras de accesibilidad táctil */
+        @media (hover: none) {
+            button, 
+            select, 
+            input[type="submit"] {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            input, select {
+                font-size: 16px;
+            }
+        }
+
+        /* Ajustes para la orientación del dispositivo */
+        @media screen and (orientation: landscape) and (max-width: 930px) {
+            .sidebar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 50px;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding-bottom: 60px;
+            }
+        }
+
         .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 200px;
             background-color: var(--primary-color);
             color: var(--text-primary);
             padding: 15px;
             height: 100vh;
-            position: fixed;
             box-shadow: 2px 0 5px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
         }
         .sidebar button {
             width: 100%;
@@ -72,18 +340,20 @@
             box-shadow: 0 4px 8px var(--shadow-color);
         }
         .content {
-            flex-grow: 1;
+            flex: 1;
             padding: 20px;
             margin-left: 200px;
-            background-color: var(--dark-color);
+            box-sizing: border-box;
+            width: calc(100% - 200px);
+            min-height: 100vh;
         }
         .section {
-            display: none;
             background-color: var(--card-bg);
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 4px 12px var(--shadow-color);
             border: 1px solid var(--border-color);
+            margin-bottom: 20px;
         }
         .form-group {
             margin-bottom: 20px;
@@ -1150,7 +1420,7 @@
             <span class="home-icon">🏠</span> Home
         </button>
         <button onclick="showSection('elaboracion')">
-            <span class="section-icon">🦑</span> Elaboración
+            <span class="section-icon">⚙️</span> Elaboración
         </button>
         <button onclick="showSection('gestionPersonas')">Gestión de Personas</button>
     </div>
@@ -1163,7 +1433,7 @@
                 <h1>Bienvenido al Sistema de Gestión</h1>
                 <div class="welcome-cards">
                     <div class="welcome-card" onclick="showSection('elaboracion')">
-                        <div class="card-icon">🦑</div>
+                        <div class="card-icon">⚙️</div>
                         <h3>Elaboración</h3>
                         <p>Gestiona el inventario, elaboraciones y programación</p>
                     </div>
