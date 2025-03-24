@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gestión de Producción</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de inventario y elaboraciones</title>
     <style>
         :root {
             --primary-color: #1a1b4b;
             --secondary-color: #292a73;
-            --accent-color: #f72585;
+            --accent-color: #0c8888f7;
             --light-color: #4cc9f0;
             --dark-color: #0f1033;
             --success-color: #4ef037;
@@ -23,157 +23,14 @@
             --input-border: #3a3b8c;
             --shadow-color: rgba(247, 37, 133, 0.2);
         }
-
-        /* Estilos base */
         body {
+            font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: var(--primary-color);
+            display: flex;
+            background-color: var(--dark-color);
             color: var(--text-primary);
-            min-height: 100vh;
         }
-
-        /* Media query para dispositivos móviles */
-        @media screen and (max-width: 430px) {
-            .sidebar {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 60px;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 0;
-                z-index: 1000;
-            }
-
-            .sidebar button {
-                padding: 8px;
-                margin: 0;
-                font-size: 0.8em;
-                width: auto;
-                min-width: 80px;
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding: 15px;
-                padding-bottom: 70px;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .section-nav {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .section-nav button {
-                width: 100%;
-            }
-
-            .grid-container {
-                grid-template-columns: 1fr;
-            }
-
-            .card {
-                margin: 10px 0;
-                padding: 15px;
-            }
-
-            .form-group {
-                flex-direction: column;
-            }
-
-            .form-group input,
-            .form-group select {
-                width: 100%;
-                margin: 5px 0;
-            }
-
-            table {
-                font-size: 0.9em;
-            }
-
-            th, td {
-                padding: 8px;
-            }
-
-            .modal-content {
-                width: 90%;
-                margin: 20px auto;
-            }
-        }
-
-        /* Media query para tablets */
-        @media screen and (min-width: 431px) and (max-width: 768px) {
-            .sidebar {
-                width: 60px;
-            }
-
-            .sidebar button {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-
-            .main-content {
-                margin-left: 60px;
-            }
-
-            .grid-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        /* Media query para ordenadores */
-        @media screen and (min-width: 769px) {
-            .sidebar {
-                width: 200px;
-            }
-
-            .main-content {
-                margin-left: 200px;
-            }
-
-            .grid-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        /* Mejoras de accesibilidad táctil */
-        @media (hover: none) {
-            button, 
-            select, 
-            input[type="submit"] {
-                min-height: 44px;
-                min-width: 44px;
-            }
-
-            input, select {
-                font-size: 16px;
-            }
-        }
-
-        /* Ajustes para la orientación del dispositivo */
-        @media screen and (orientation: landscape) and (max-width: 930px) {
-            .sidebar {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 50px;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 0;
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding-bottom: 60px;
-            }
-        }
-
         .sidebar {
             width: 200px;
             background-color: var(--primary-color);
@@ -1293,7 +1150,7 @@
             <span class="home-icon">🏠</span> Home
         </button>
         <button onclick="showSection('elaboracion')">
-            <span class="section-icon">⚙️</span> Elaboración
+            <span class="section-icon">🦑</span> Elaboración
         </button>
         <button onclick="showSection('gestionPersonas')">Gestión de Personas</button>
     </div>
@@ -1306,7 +1163,7 @@
                 <h1>Bienvenido al Sistema de Gestión</h1>
                 <div class="welcome-cards">
                     <div class="welcome-card" onclick="showSection('elaboracion')">
-                        <div class="card-icon">⚙️</div>
+                        <div class="card-icon">🦑</div>
                         <h3>Elaboración</h3>
                         <p>Gestiona el inventario, elaboraciones y programación</p>
                     </div>
