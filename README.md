@@ -6,379 +6,153 @@
     <title>Gestión de Producción</title>
     <style>
         :root {
-            --primary-color: #1a1b4b;
-            --secondary-color: #292a73;
-            --accent-color: #f72585;
-            --light-color: #4cc9f0;
-            --dark-color: #0f1033;
-            --success-color: #4ef037;
-            --danger-color: #ff006e;
-            --warning-color: #fb8500;
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --light-color: #ecf0f1;
+            --dark-color: #1a252f;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f1c40f;
             --text-primary: #ffffff;
-            --text-secondary: #b8c7ff;
-            --border-color: #292a73;
-            --hover-color: #3a3b8c;
-            --card-bg: #1a1b4b;
-            --input-bg: #292a73;
-            --input-border: #3a3b8c;
-            --shadow-color: rgba(247, 37, 133, 0.2);
+            --text-secondary: #bdc3c7;
+            --border-color: #34495e;
+            --hover-color: #243342;
+            --card-bg: rgba(44, 62, 80, 0.95);
+            --input-bg: rgba(52, 73, 94, 0.8);
+            --input-border: #3498db;
+            --shadow-color: rgba(52, 152, 219, 0.2);
         }
 
         /* Estilos base */
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: var(--primary-color);
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* Media query para dispositivos móviles */
-        @media screen and (max-width: 430px) {
-            body {
-                overflow-x: hidden;
-            }
-
-            .sidebar {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: auto;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 10px;
-                z-index: 1000;
-                background-color: var(--primary-color);
-                box-shadow: 0 -2px 10px var(--shadow-color);
-            }
-
-            .sidebar button {
-                padding: 10px;
-                margin: 0;
-                font-size: 0.9em;
-                width: auto;
-                min-width: 100px;
-                height: 40px;
-            }
-
-            .home-button {
-                margin-bottom: 0 !important;
-            }
-
-            .content {
-                margin-left: 0 !important;
-                padding: 10px;
-                padding-bottom: 80px;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .section {
-                padding: 15px;
-                margin-bottom: 60px;
-            }
-
-            .section-header h2 {
-                font-size: 1.5em;
-                margin-bottom: 15px;
-            }
-
-            .section-nav {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .section-nav button {
-                width: 100%;
-                margin: 0;
-            }
-
-            .form-group {
-                flex-direction: column;
-                margin-bottom: 15px;
-            }
-
-            .form-group input,
-            .form-group select,
-            .form-group textarea {
-                width: 100%;
-                margin: 5px 0;
-                font-size: 16px;
-                padding: 12px;
-            }
-
-            table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-                font-size: 0.9em;
-                margin: 10px 0;
-            }
-
-            th, td {
-                padding: 10px;
-                min-width: 100px;
-            }
-
-            .welcome-cards {
-                grid-template-columns: 1fr;
-                gap: 15px;
-                padding: 10px;
-            }
-
-            .welcome-card {
-                padding: 20px;
-            }
-
-            .welcome-stats {
-                grid-template-columns: 1fr;
-                gap: 15px;
-                padding: 10px;
-            }
-
-            .stat-card {
-                padding: 15px;
-            }
-
-            .modal-content {
-                width: 95%;
-                margin: 10px auto;
-                padding: 15px;
-                max-height: 90vh;
-                overflow-y: auto;
-            }
-
-            .notas-container {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .alert-popup {
-                width: 90%;
-                left: 50%;
-                transform: translateX(-50%);
-                font-size: 0.9em;
-            }
-
-            .historial-content {
-                overflow-x: auto;
-            }
-
-            .bins-list {
-                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-                gap: 5px;
-            }
-
-            .bin-item {
-                padding: 5px;
-                font-size: 0.8em;
-            }
-
-            .reloj-analogico {
-                width: 120px;
-                height: 120px;
-            }
-        }
-
-        /* Ajustes específicos para iPhone 13 */
-        @media screen and (device-width: 390px) and (device-height: 844px) {
-            .sidebar button {
-                font-size: 0.85em;
-                min-width: 90px;
-            }
-
-            .content {
-                padding-bottom: 70px;
-            }
-
-            .form-group input,
-            .form-group select,
-            .form-group textarea {
-                font-size: 16px;
-                padding: 10px;
-            }
-        }
-
-        /* Ajustes para la orientación landscape en móviles */
-        @media screen and (orientation: landscape) and (max-height: 500px) {
-            .sidebar {
-                height: auto;
-                padding: 5px;
-            }
-
-            .sidebar button {
-                height: 35px;
-                padding: 5px 10px;
-            }
-
-            .content {
-                padding-bottom: 50px;
-            }
-
-            .welcome-cards,
-            .welcome-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        /* Media query para tablets */
-        @media screen and (min-width: 431px) and (max-width: 768px) {
-            .sidebar {
-                width: 60px;
-            }
-
-            .sidebar button {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-
-            .main-content {
-                margin-left: 60px;
-            }
-
-            .grid-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        /* Media query para ordenadores */
-        @media screen and (min-width: 769px) {
-            .sidebar {
-                width: 200px;
-            }
-
-            .main-content {
-                margin-left: 200px;
-            }
-
-            .grid-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        /* Mejoras de accesibilidad táctil */
-        @media (hover: none) {
-            button, 
-            select, 
-            input[type="submit"] {
-                min-height: 44px;
-                min-width: 44px;
-            }
-
-            input, select {
-                font-size: 16px;
-            }
-        }
-
-        /* Ajustes para la orientación del dispositivo */
-        @media screen and (orientation: landscape) and (max-width: 930px) {
-            .sidebar {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 50px;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 0;
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding-bottom: 60px;
-            }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(236, 240, 241, 0.1), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 200px;
-            background-color: var(--primary-color);
+            width: 250px;
+            background: rgba(44, 62, 80, 0.98);
+            backdrop-filter: blur(10px);
             color: var(--text-primary);
-            padding: 15px;
+            padding: 20px;
             height: 100vh;
-            box-shadow: 2px 0 5px var(--shadow-color);
+            box-shadow: 4px 0 15px var(--shadow-color);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 15px;
             z-index: 1000;
+            border-right: 1px solid rgba(52, 152, 219, 0.2);
         }
         .sidebar button {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             margin: 5px 0;
-            background-color: var(--secondary-color);
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
             color: var(--text-primary);
             border: none;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 8px;
             transition: all 0.3s ease;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         .home-button {
-            background-color: var(--accent-color) !important;
-            margin-bottom: 15px !important;
+            background: linear-gradient(135deg, var(--accent-color), var(--secondary-color)) !important;
+            margin-bottom: 20px !important;
             font-weight: 600 !important;
+            transform: translateY(-2px);
         }
         .home-button:hover {
-            background-color: var(--light-color) !important;
+            transform: translateY(-4px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
         }
         .home-icon {
             font-size: 1.2em;
         }
         .sidebar button:hover {
-            background-color: var(--accent-color);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px var(--shadow-color);
+            box-shadow: 0 4px 15px var(--shadow-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
         }
         .content {
             flex: 1;
-            padding: 20px;
-            margin-left: 200px;
+            padding: 30px;
+            margin-left: 250px;
             box-sizing: border-box;
-            width: calc(100% - 200px);
+            width: calc(100% - 250px);
             min-height: 100vh;
+            position: relative;
+            z-index: 1;
         }
         .section {
-            background-color: var(--card-bg);
-            padding: 25px;
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px var(--shadow-color);
-            border: 1px solid var(--border-color);
-            margin-bottom: 20px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px var(--shadow-color);
         }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 500;
             color: var(--text-primary);
+            font-size: 1.1em;
         }
-        select, input {
+        select, input, textarea {
             width: 100%;
             padding: 12px;
             margin-bottom: 10px;
-            border: 1px solid var(--input-border);
-            border-radius: 6px;
+            border: 2px solid var(--input-border);
+            border-radius: 8px;
             box-sizing: border-box;
-            background-color: var(--input-bg);
+            background: var(--input-bg);
             color: var(--text-primary);
             transition: all 0.3s ease;
+            font-size: 1em;
+            backdrop-filter: blur(5px);
         }
-        select:focus, input:focus {
+        select:focus, input:focus, textarea:focus {
             outline: none;
-            border-color: var(--light-color);
-            box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.2);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            transform: translateY(-2px);
         }
         .unidad-medida {
             color: var(--light-color);
@@ -387,79 +161,76 @@
         }
         table {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: var(--card-bg);
-            border-radius: 8px;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 25px;
+            background: rgba(44, 62, 80, 0.95);
+            border-radius: 12px;
             overflow: hidden;
-        }
-        table, th, td {
-            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px var(--shadow-color);
         }
         th, td {
             padding: 15px;
             text-align: left;
+            border-bottom: 1px solid rgba(52, 152, 219, 0.2);
         }
         th {
-            background-color: var(--secondary-color);
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
             color: var(--text-primary);
             font-weight: 500;
-        }
-        tr:nth-child(even) {
-            background-color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9em;
         }
         tr:hover {
-            background-color: var(--hover-color);
+            background: rgba(52, 152, 219, 0.1);
         }
         .btn {
-            padding: 12px 20px;
-            background-color: var(--light-color);
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
             color: var(--text-primary);
             border: none;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 8px;
             transition: all 0.3s ease;
             font-weight: 500;
+            font-size: 1em;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .btn:hover {
-            background-color: #d13a4f;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px var(--shadow-color);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px var(--shadow-color);
         }
         .btn-danger {
-            background-color: var(--danger-color);
-        }
-        .btn-danger:hover {
-            background-color: #c0392b;
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
         }
         .btn-warning {
-            background-color: var(--warning-color);
+            background: linear-gradient(135deg, var(--warning-color), #f39c12);
             color: var(--dark-color);
         }
-        .btn-warning:hover {
-            background-color: #f39c12;
-        }
         .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 12px;
             display: none;
             border-left: 4px solid;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.3s ease-out;
         }
         .alert-success {
-            background-color: rgba(46, 204, 113, 0.1);
-            color: #2ecc71;
-            border-left-color: #2ecc71;
+            border-left-color: var(--success-color);
+            box-shadow: 0 4px 15px rgba(0, 200, 83, 0.2);
         }
         .alert-error {
-            background-color: rgba(231, 76, 60, 0.1);
-            color: #e74c3c;
-            border-left-color: #e74c3c;
+            border-left-color: var(--danger-color);
+            box-shadow: 0 4px 15px rgba(255, 23, 68, 0.2);
         }
         .alert-warning {
-            background-color: rgba(241, 196, 15, 0.1);
-            color: #f1c40f;
-            border-left-color: #f1c40f;
+            border-left-color: var(--warning-color);
+            box-shadow: 0 4px 15px rgba(255, 214, 0, 0.2);
         }
         .consumo-estimado {
             background-color: var(--secondary-color);
@@ -820,19 +591,22 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
             z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
         }
         .modal-content {
             position: relative;
-            background-color: var(--card-bg);
+            background: rgba(44, 62, 80, 0.98);
             margin: 50px auto;
-            padding: 20px;
+            padding: 30px;
             width: 90%;
-            max-width: 500px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px var(--shadow-color);
-            border: 1px solid var(--border-color);
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            animation: slideUp 0.3s ease-out;
         }
         .modal-content h3 {
             color: var(--text-primary);
@@ -1134,233 +908,280 @@
         }
         .notas-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 2fr;
             gap: 20px;
             background-color: var(--card-bg);
             padding: 20px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            min-height: 400px;
+            min-height: 600px;
         }
-        .nueva-nota, .historial-notas {
+        .nueva-nota {
             background-color: var(--secondary-color);
             padding: 20px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
+            height: fit-content;
         }
-        .nueva-nota h3, .historial-notas h3 {
-            margin-top: 0;
+        .historial-notas {
+            background-color: var(--secondary-color);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .notas-filtros {
+            display: flex;
+            gap: 10px;
             margin-bottom: 15px;
-            color: var(--text-primary);
-            font-size: 1.2em;
+            flex-wrap: wrap;
         }
-        .plantillas-controls {
-            margin-bottom: 15px;
-        }
-        .plantillas-controls select {
-            width: 100%;
-            padding: 10px;
-            background-color: var(--input-bg);
+        .notas-filtros input,
+        .notas-filtros select {
+            padding: 8px 12px;
             border: 1px solid var(--input-border);
             border-radius: 6px;
+            background-color: var(--input-bg);
             color: var(--text-primary);
-            font-size: 1em;
-            cursor: pointer;
+            min-width: 200px;
         }
-        .plantillas-controls select:focus {
-            outline: none;
-            border-color: var(--light-color);
-            box-shadow: 0 0 0 2px rgba(74, 138, 199, 0.2);
+        .lista-notas {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        .lista-notas::-webkit-scrollbar {
+            width: 8px;
+        }
+        .lista-notas::-webkit-scrollbar-track {
+            background: var(--input-bg);
+            border-radius: 4px;
+        }
+        .lista-notas::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 4px;
+        }
+        .nota-item {
+            background-color: var(--card-bg);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .nota-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+        .nota-fecha {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .nota-fecha-programada {
+            color: var(--light-color);
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+        .nota-persona {
+            background-color: var(--input-bg);
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+        .nota-contenido {
+            white-space: pre-wrap;
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        .nota-acciones {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
         }
         #areaNotas {
             width: 100%;
-            height: 200px;
+            height: 300px;
             padding: 15px;
             background-color: var(--input-bg);
             border: 1px solid var(--input-border);
             border-radius: 6px;
             color: var(--text-primary);
             font-family: inherit;
-            font-size: 1em;
-            line-height: 1.5;
+            font-size: 1.1em;
+            line-height: 1.6;
             resize: none;
         }
-        .lista-notas {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .nota-item {
-            background-color: var(--input-bg);
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-        }
-        .nota-item .nota-fecha {
-            font-size: 0.8em;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-        .nota-item .nota-contenido {
-            white-space: pre-wrap;
-            color: var(--text-primary);
-        }
-        .nota-item .nota-acciones {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
+        @media screen and (max-width: 768px) {
+            .notas-container {
+                grid-template-columns: 1fr;
+            }
+            .notas-filtros {
+                flex-direction: column;
+            }
+            .notas-filtros input,
+            .notas-filtros select {
+                width: 100%;
+            }
         }
         /* Estilos para la pantalla de bienvenida */
         .welcome-container {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px;
         }
         .welcome-container h1 {
-            font-size: 2.5em;
-            margin-bottom: 40px;
+            font-size: 3em;
+            margin-bottom: 50px;
             color: var(--text-primary);
-            text-shadow: 2px 2px 4px var(--shadow-color);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, var(--text-primary), var(--light-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 0.5s ease-out;
         }
         .welcome-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
         }
         .welcome-card {
-            background-color: var(--card-bg);
+            background: rgba(44, 62, 80, 0.95);
             padding: 30px;
             border-radius: 12px;
-            border: 1px solid var(--border-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            transition: all 0.3s ease;
             cursor: pointer;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px var(--shadow-color);
         }
         .welcome-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px var(--shadow-color);
+            box-shadow: 0 12px 40px var(--shadow-color);
+        }
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(236, 240, 241, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .welcome-card:hover::before {
+            opacity: 1;
         }
         .card-icon {
-            font-size: 3em;
-            margin-bottom: 20px;
+            font-size: 3.5em;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .welcome-card h3 {
             color: var(--text-primary);
-            margin-bottom: 10px;
-            font-size: 1.4em;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+            font-weight: 600;
         }
         .welcome-card p {
             color: var(--text-secondary);
-            font-size: 1.1em;
-            line-height: 1.5;
+            font-size: 1.2em;
+            line-height: 1.6;
         }
         .welcome-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
         }
         .stat-card {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(44, 62, 80, 0.95);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px var(--shadow-color);
         }
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px var(--shadow-color);
+            box-shadow: 0 12px 40px var(--shadow-color);
         }
         .stat-value {
-            font-size: 2.5em;
+            font-size: 3em;
             font-weight: bold;
-            color: var(--light-color);
-            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
         }
         .stat-label {
             color: var(--text-secondary);
-            font-size: 1.1em;
-        }
-        .fecha-controls {
-            margin-bottom: 15px;
-        }
-        .fecha-controls label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-        }
-        .fecha-input {
-            width: 100%;
-            padding: 10px;
-            background-color: var(--input-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 6px;
-            color: var(--text-primary);
-            font-size: 1em;
-        }
-        .fecha-input:focus {
-            outline: none;
-            border-color: var(--light-color);
-            box-shadow: 0 0 0 2px rgba(74, 138, 199, 0.2);
-        }
-        .nota-item .nota-fecha {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8em;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-        .nota-fecha-programada {
-            color: var(--light-color);
+            font-size: 1.2em;
             font-weight: 500;
         }
-        /* Estilos para el reloj analógico */
         .reloj-analogico {
-            width: 150px;
-            height: 150px;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
-            background: var(--card-bg);
-            border: 4px solid var(--light-color);
+            background: rgba(44, 62, 80, 0.95);
+            border: 4px solid var(--accent-color);
             position: relative;
             margin: 0 auto;
-            box-shadow: 0 0 20px rgba(74, 138, 199, 0.3);
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.3);
+            backdrop-filter: blur(10px);
         }
         .reloj-centro {
-            width: 12px;
-            height: 12px;
-            background: var(--light-color);
+            width: 15px;
+            height: 15px;
+            background: var(--accent-color);
             border-radius: 50%;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 10;
+            box-shadow: 0 0 10px var(--accent-color);
         }
         .reloj-aguja {
             position: absolute;
             bottom: 50%;
             left: 50%;
             transform-origin: bottom;
-            background: var(--light-color);
+            background: var(--accent-color);
             border-radius: 4px;
+            box-shadow: 0 0 5px var(--accent-color);
         }
         .reloj-hora {
             width: 4px;
-            height: 40px;
+            height: 45px;
             margin-left: -2px;
         }
         .reloj-minuto {
             width: 3px;
-            height: 50px;
+            height: 60px;
             margin-left: -1.5px;
         }
         .reloj-segundo {
             width: 2px;
-            height: 60px;
+            height: 70px;
             margin-left: -1px;
             background: var(--danger-color);
+            box-shadow: 0 0 5px var(--danger-color);
         }
         .reloj-marcas {
             position: absolute;
@@ -1370,71 +1191,302 @@
         .reloj-marca {
             position: absolute;
             width: 2px;
-            height: 10px;
-            background: var(--light-color);
+            height: 12px;
+            background: var(--accent-color);
             left: 50%;
-            transform-origin: 50% 70px;
+            transform-origin: 50% 85px;
+            box-shadow: 0 0 3px var(--accent-color);
         }
         .reloj-fecha {
             position: absolute;
-            bottom: -30px;
+            bottom: -40px;
             left: 50%;
             transform: translateX(-50%);
             color: var(--text-secondary);
-            font-size: 0.8em;
+            font-size: 1em;
             white-space: nowrap;
             text-align: center;
+            font-weight: 500;
         }
-        /* Estilos para la sección de Elaboración */
-        .section-header {
-            margin-bottom: 30px;
-        }
-        .section-nav {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        .section-nav .btn {
-            flex: 1;
-            min-width: 200px;
+        /* Estilos existentes */
+        .mobile-app-link {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2196F3;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-weight: bold;
             text-align: center;
-            background-color: var(--secondary-color);
-            transition: all 0.3s ease;
         }
-        .section-nav .btn:hover {
-            background-color: var(--accent-color);
-            transform: translateY(-2px);
+
+        @media (max-width: 768px) {
+            .mobile-app-link {
+                display: block; /* Visible en móvil */
+            }
         }
-        #subSectionContent {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
+
+        /* Estilos responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -250px;
+                width: 250px;
+                height: 100vh;
+                background: rgba(44, 62, 80, 0.98);
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+                transition: left 0.3s ease;
+                padding: 20px;
+                box-shadow: 4px 0 15px var(--shadow-color);
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .content {
+                margin-left: 0;
+                width: 100%;
+                padding: 15px;
+            }
+
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                z-index: 1001;
+                background: var(--accent-color);
+                border: none;
+                color: var(--text-primary);
+                padding: 10px 15px;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+
+            .section {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .welcome-cards {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .welcome-stats {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .welcome-card {
+                padding: 20px;
+            }
+
+            .card-icon {
+                font-size: 2.5em;
+            }
+
+            .welcome-card h3 {
+                font-size: 1.3em;
+            }
+
+            .welcome-card p {
+                font-size: 1em;
+            }
+
+            .stat-card {
+                padding: 20px;
+            }
+
+            .stat-value {
+                font-size: 2.5em;
+            }
+
+            .stat-label {
+                font-size: 1em;
+            }
+
+            .reloj-analogico {
+                width: 150px;
+                height: 150px;
+            }
+
+            .reloj-hora {
+                height: 35px;
+            }
+
+            .reloj-minuto {
+                height: 50px;
+            }
+
+            .reloj-segundo {
+                height: 60px;
+            }
+
+            .reloj-marca {
+                height: 10px;
+                transform-origin: 50% 70px;
+            }
+
+            .section-nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .section-nav .btn {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            th, td {
+                padding: 12px;
+                min-width: 120px;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            select, input, textarea {
+                padding: 12px;
+                font-size: 16px; /* Evita zoom en iOS */
+            }
+
+            .btn {
+                width: 100%;
+                padding: 12px;
+                margin: 5px 0;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 20px auto;
+                padding: 20px;
+            }
+
+            .notas-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .notas-filtros {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .notas-filtros input,
+            .notas-filtros select {
+                width: 100%;
+            }
+
+            .nota-item {
+                padding: 15px;
+            }
+
+            .nota-fecha {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .nota-acciones {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .nota-acciones .btn {
+                width: 100%;
+            }
+
+            .historial-container {
+                margin-top: 15px;
+            }
+
+            .historial-content {
+                margin-top: 10px;
+            }
+
+            .alert-popup {
+                width: 90%;
+                left: 5%;
+                right: 5%;
+                padding: 15px;
+            }
+        }
+
+        /* Estilos para pantallas muy pequeñas */
+        @media (max-width: 480px) {
+            .welcome-container h1 {
+                font-size: 2em;
+            }
+
+            .stat-value {
+                font-size: 2em;
+            }
+
+            .reloj-analogico {
+                width: 120px;
+                height: 120px;
+            }
+
+            .reloj-hora {
+                height: 30px;
+            }
+
+            .reloj-minuto {
+                height: 45px;
+            }
+
+            .reloj-segundo {
+                height: 55px;
+            }
+
+            .reloj-marca {
+                height: 8px;
+                transform-origin: 50% 60px;
+            }
         }
     </style>
 </head>
 <body>
+    
     <div class="sidebar">
         <button onclick="showSection('bienvenida')" class="home-button">
             <span class="home-icon">🏠</span> Home
         </button>
         <button onclick="showSection('elaboracion')">
-            <span class="section-icon">⚙️</span> Elaboración
+            <span class="section-icon"></span>🦑 Elaboración
         </button>
         <button onclick="showSection('gestionPersonas')">Gestión de Personas</button>
     </div>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div class="content">
         <div id="alertContainer"></div>
         
         <!-- Pantalla de Bienvenida -->
         <div id="bienvenida" class="section">
             <div class="welcome-container">
-                <h1>Bienvenido al Sistema de Gestión</h1>
+                <h1>Sistema de gestión</h1>
                 <div class="welcome-cards">
                     <div class="welcome-card" onclick="showSection('elaboracion')">
-                        <div class="card-icon">⚙️</div>
-                        <h3>Elaboración</h3>
+                        <div class="card-icon"></div>
+                        <h3>🦑 Elaboración</h3>
                         <p>Gestiona el inventario, elaboraciones y programación</p>
                     </div>
                     <div class="welcome-card" onclick="showSection('gestionPersonas')">
@@ -1554,8 +1606,12 @@
                 <input type="number" id="bins" min="1" max="200" placeholder="Ingrese el número de bins">
             </div>
             <div class="form-group">
-                <label>Consumo Estimado por <span id="binsValue">1</span> Bins:</label>
+                <label aria-label="Consumo Estimado por Bins">Consumo Estimado por <span id="binsValue">1</span> Bins:</label>
                 <div id="consumoEstimado" class="consumo-estimado"></div>
+            </div>
+            <div class="form-group">
+                <label for="comentariosElaboracion">Comentarios:</label>
+                <textarea id="comentariosElaboracion" rows="4" placeholder="Ingrese cualquier comentario o nota adicional sobre la elaboración"></textarea>
             </div>
             <button class="btn" onclick="registrarElaboracion()">Registrar Elaboración</button>
             
@@ -1578,6 +1634,7 @@
                                 <th>Referencia</th>
                                 <th>Número de Bins</th>
                                 <th>Consumo</th>
+                                <th>Comentarios</th>
                                 <th>Fecha y Hora</th>
                                 <th>Acciones</th>
                             </tr>
@@ -1612,6 +1669,18 @@
                 </div>
                 <div class="historial-notas">
                     <h3>Historial de Notas</h3>
+                    <div class="notas-filtros">
+                        <input type="text" id="buscarNota" placeholder="Buscar en notas..." onkeyup="filtrarNotas()">
+                        <select id="filtroFecha" onchange="filtrarNotas()">
+                            <option value="todas">Todas las fechas</option>
+                            <option value="hoy">Hoy</option>
+                            <option value="semana">Esta semana</option>
+                            <option value="mes">Este mes</option>
+                        </select>
+                        <select id="filtroPersona" onchange="filtrarNotas()">
+                            <option value="todas">Todas las personas</option>
+                        </select>
+                    </div>
                     <div id="listaNotas" class="lista-notas"></div>
                 </div>
             </div>
@@ -1626,7 +1695,12 @@
             </div>
             <div class="form-group">
                 <label for="cargoPersona">Cargo:</label>
-                <input type="text" id="cargoPersona" placeholder="Ingrese el cargo">
+                <select id="cargoPersona">
+                    <option value="">Seleccione un cargo</option>
+                    <option value="Operario">Operario</option>
+                    <option value="Carretillero">Carretillero</option>
+                    <option value="Retráctil">Retráctil</option>
+                </select>
             </div>
             <button class="btn" onclick="agregarPersona()">Agregar Persona</button>
             
@@ -1666,7 +1740,7 @@
             'SAL': 12.5,
             'HIDRAL-70': 6,
             'HYDROMAR-4': 1,
-            'ANTIESPUMANTE': 0.5
+            'ANTIESPUMANTE': 0
         };
 
         // Configuración de umbrales de stock
@@ -1813,6 +1887,11 @@ Personal asignado:
                 // Actualizar estadísticas cuando se muestra la pantalla de bienvenida
                 if (sectionId === 'bienvenida') {
                     actualizarEstadisticas();
+                }
+
+                // Cerrar el menú en móvil después de seleccionar una sección
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.sidebar').classList.remove('active');
                 }
             }
         }
@@ -2266,9 +2345,10 @@ Personal asignado:
             const cliente = document.getElementById('cliente').value;
             const referencia = document.getElementById('referencia').value;
             const bins = parseInt(document.getElementById('bins').value);
+            const comentarios = document.getElementById('comentariosElaboracion').value.trim();
 
             if (!cliente || !referencia || !bins) {
-                mostrarAlerta('Por favor, complete todos los campos', 'error');
+                mostrarAlerta('Por favor, complete todos los campos obligatorios', 'error');
                 return;
             }
 
@@ -2297,6 +2377,7 @@ Personal asignado:
                     referencia,
                     bins,
                     consumo,
+                    comentarios,
                     fechaHora: new Date().toLocaleString()
                 });
 
@@ -2310,6 +2391,7 @@ Personal asignado:
                 document.getElementById('cliente').value = '';
                 document.getElementById('referencia').value = '';
                 document.getElementById('bins').value = '1';
+                document.getElementById('comentariosElaboracion').value = '';
             } catch (error) {
                 mostrarAlerta(error.message, 'error');
             }
@@ -2331,12 +2413,17 @@ Personal asignado:
                     `${item.producto}: ${item.cantidad} ${productosConfig[item.producto]} (Lote: ${item.lote})`
                 ).join('<br>');
                 
+                const comentariosHtml = elaboracion.comentarios ? 
+                    `<div class="comentarios-elaboracion">${elaboracion.comentarios.replace(/\n/g, '<br>')}</div>` : 
+                    '<div class="comentarios-elaboracion">-</div>';
+                
                 row.innerHTML = `
                     <td><input type="checkbox" class="elaboracion-checkbox" value="${index}" onchange="actualizarBotonEliminar()"></td>
                     <td>${elaboracion.cliente}</td>
                     <td>${elaboracion.referencia}</td>
                     <td>${elaboracion.bins}</td>
                     <td>${consumoHtml}</td>
+                    <td>${comentariosHtml}</td>
                     <td>${elaboracion.fechaHora}</td>
                     <td>
                         <button class="btn btn-warning" onclick="modificarElaboracion(${index})">Modificar</button>
@@ -2434,6 +2521,10 @@ Personal asignado:
                         <label for="binsModificar">Número de Bins:</label>
                         <input type="number" id="binsModificar" value="${elaboracion.bins}" min="1" max="200">
                     </div>
+                    <div class="form-group">
+                        <label for="comentariosModificar">Comentarios:</label>
+                        <textarea id="comentariosModificar" rows="4">${elaboracion.comentarios || ''}</textarea>
+                    </div>
                     <div class="modal-buttons">
                         <button class="btn btn-warning" onclick="guardarModificacion(${index})">Guardar</button>
                         <button class="btn btn-danger" onclick="cerrarModalModificar()">Cancelar</button>
@@ -2450,9 +2541,10 @@ Personal asignado:
             const cliente = document.getElementById('clienteModificar').value;
             const referencia = document.getElementById('referenciaModificar').value;
             const bins = parseInt(document.getElementById('binsModificar').value);
+            const comentarios = document.getElementById('comentariosModificar').value.trim();
 
             if (!cliente || !referencia || !bins) {
-                mostrarAlerta('Por favor, complete todos los campos', 'error');
+                mostrarAlerta('Por favor, complete todos los campos obligatorios', 'error');
                 return;
             }
 
@@ -2478,6 +2570,7 @@ Personal asignado:
                 cliente,
                 referencia,
                 bins,
+                comentarios,
                 fechaHora: new Date().toLocaleString()
             };
 
@@ -2521,7 +2614,95 @@ Personal asignado:
             // Ordenar notas por fecha programada
             notas.sort((a, b) => new Date(a.fechaProgramada) - new Date(b.fechaProgramada));
             
+            // Actualizar el selector de filtro de personas
+            const filtroPersona = document.getElementById('filtroPersona');
+            if (filtroPersona) {
+                const personas = new Set();
+                notas.forEach(nota => {
+                    if (nota.personasAsignadas) {
+                        nota.personasAsignadas.forEach(persona => personas.add(persona));
+                    }
+                });
+                
+                // Mantener la primera opción
+                filtroPersona.innerHTML = '<option value="todas">Todas las personas</option>';
+                
+                // Agregar las personas únicas
+                personas.forEach(persona => {
+                    const option = document.createElement('option');
+                    option.value = persona;
+                    option.textContent = persona;
+                    filtroPersona.appendChild(option);
+                });
+            }
+            
             notas.forEach((nota, index) => {
+                const fechaProgramada = new Date(nota.fechaProgramada);
+                const fechaFormateada = fechaProgramada.toLocaleDateString('es-ES', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                const notaElement = document.createElement('div');
+                notaElement.className = 'nota-item';
+                notaElement.innerHTML = `
+                    <div class="nota-fecha">
+                        <span>Fecha de creación: ${nota.fechaCreacion}</span>
+                        <span class="nota-fecha-programada">Programada para: ${fechaFormateada}</span>
+                    </div>
+                    ${nota.personasAsignadas && nota.personasAsignadas.length > 0 ? 
+                        `<div class="nota-persona">👥 Asignada a: ${nota.personasAsignadas.join(', ')}</div>` : ''}
+                    <div class="nota-contenido">${nota.contenido.replace(/\n/g, '<br>')}</div>
+                    <div class="nota-acciones">
+                        <button class="btn btn-warning" onclick="modificarNota(${index})">Modificar</button>
+                        <button class="btn btn-danger" onclick="eliminarNota(${index})">Eliminar</button>
+                    </div>
+                `;
+                listaNotas.appendChild(notaElement);
+            });
+        }
+
+        // Función para filtrar notas
+        function filtrarNotas() {
+            const busqueda = document.getElementById('buscarNota').value.toLowerCase();
+            const filtroFecha = document.getElementById('filtroFecha').value;
+            const filtroPersona = document.getElementById('filtroPersona').value;
+            
+            const notasFiltradas = notas.filter(nota => {
+                const cumpleBusqueda = nota.contenido.toLowerCase().includes(busqueda);
+                const cumplePersona = filtroPersona === 'todas' || 
+                    (nota.personasAsignadas && nota.personasAsignadas.includes(filtroPersona));
+                
+                let cumpleFecha = true;
+                if (filtroFecha !== 'todas') {
+                    const fechaNota = new Date(nota.fechaProgramada);
+                    const hoy = new Date();
+                    const inicioSemana = new Date(hoy);
+                    inicioSemana.setDate(hoy.getDate() - hoy.getDay());
+                    const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+                    
+                    switch(filtroFecha) {
+                        case 'hoy':
+                            cumpleFecha = fechaNota.toDateString() === hoy.toDateString();
+                            break;
+                        case 'semana':
+                            cumpleFecha = fechaNota >= inicioSemana;
+                            break;
+                        case 'mes':
+                            cumpleFecha = fechaNota >= inicioMes;
+                            break;
+                    }
+                }
+                
+                return cumpleBusqueda && cumplePersona && cumpleFecha;
+            });
+            
+            const listaNotas = document.getElementById('listaNotas');
+            listaNotas.innerHTML = '';
+            
+            notasFiltradas.forEach((nota, index) => {
                 const fechaProgramada = new Date(nota.fechaProgramada);
                 const fechaFormateada = fechaProgramada.toLocaleDateString('es-ES', {
                     weekday: 'long',
@@ -2922,6 +3103,7 @@ Personal asignado:
 
         // Función para modificar una persona
         function modificarPersona(index) {
+            const personas = JSON.parse(localStorage.getItem('personas')) || [];
             const persona = personas[index];
             
             const modal = document.createElement('div');
@@ -2936,7 +3118,12 @@ Personal asignado:
                     </div>
                     <div class="form-group">
                         <label for="cargoPersonaModificar">Cargo:</label>
-                        <input type="text" id="cargoPersonaModificar" value="${persona.cargo}">
+                        <select id="cargoPersonaModificar">
+                            <option value="">Seleccione un cargo</option>
+                            <option value="Operario" ${persona.cargo === 'Operario' ? 'selected' : ''}>Operario</option>
+                            <option value="Carretillero" ${persona.cargo === 'Carretillero' ? 'selected' : ''}>Carretillero</option>
+                            <option value="Retráctil" ${persona.cargo === 'Retráctil' ? 'selected' : ''}>Retráctil</option>
+                        </select>
                     </div>
                     <div class="modal-buttons">
                         <button class="btn btn-warning" onclick="guardarModificacionPersona(${index})">Guardar</button>
@@ -3022,6 +3209,25 @@ Personal asignado:
                 });
             });
         }
+
+        // Función para alternar el menú móvil
+        function toggleMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Cerrar el menú al hacer clic fuera de él en móvil
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target) && 
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html> 
